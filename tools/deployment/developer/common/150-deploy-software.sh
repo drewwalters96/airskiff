@@ -31,11 +31,11 @@ CURRENT_DIR="$(pwd)"
 cd ${CURRENT_DIR}
 
 # Lint deployment manifests
-IMAGE=${PL_IMAGE} ${PEGLEG} lint -p deployment_files/
+#IMAGE=${PL_IMAGE} ${PEGLEG} site -r airship-treasuremap lint airskiff
 
 # Collect the deployment manifests that will be used
 mkdir -p ${PL_OUTPUT}
-IMAGE=${PL_IMAGE} ${PEGLEG} site -p deployment_files/ collect ${PL_SITE} -s ${PL_OUTPUT}
+IMAGE=${PL_IMAGE} ${PEGLEG} site -r airship-treasuremap collect airskiff -s ${PL_OUTPUT}
 cp -rp ${CURRENT_DIR}/${PL_OUTPUT} ${SY_PATH}/${SY_OUTPUT}
 
 # Deploy the site
@@ -51,10 +51,10 @@ cd ${SY_PATH}
 
 ${SHIPYARD} ${SY_AUTH} create configdocs the-design \
              --replace \
-             --directory=/target/${PL_OUTPUT}
+             --directory=/target/${PL_OUTPUT} 
 
 ${SHIPYARD} ${SY_AUTH} commit configdocs --force
-${SHIPYARD} ${SY_AUTH} create action update_software
+${SHIPYARD} ${SY_AUTH} create action update_software --allow-intermediate-commits
 
 # To see the status of the action:
 #     shipyard describe action 01CKPKZ2FXSMYV0V99GH3R3W3P
